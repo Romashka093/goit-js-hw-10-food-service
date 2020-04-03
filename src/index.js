@@ -1,6 +1,6 @@
 import menuList from './menu.json';
-import template from './template.hbs'
-import './styles.css';
+import templateItem from './templates/menuItemTemplate.hbs'
+import './css/styles.css';
 
 const refs = {
     menu: document.querySelector('ul.js-menu'),
@@ -13,16 +13,25 @@ const Theme = {
     DARK: 'dark-theme',
 };
 
-const menuItem = template(menuList);
-refs.menu.innerHTML = menuItem;
+const menuItem = templateItem(menuList);
+refs.menu.insertAdjacentHTML('beforeend', menuItem);
+// or ----------
+// refs.menu.innerHTML = menuItem;
 
-refs.switcher.addEventListener('click', handleChange);
+refs.body.classList.add(localStorage.getItem('theme'));
 
-function handleChange(evt) {
-    console.dir(evt.target)
-    if (evt.target) {
-        refs.body.classList.add(Theme.DARK);
-        // evt.target.checked = true
+if (localStorage.getItem('theme') === Theme.DARK) {
+    refs.switcher.checked = true;
+} else refs.body.setAttribute('class', 'light-theme');
+
+refs.body.addEventListener('change', handkeChange);
+
+function handkeChange() {
+    if (refs.switcher.checked) {
+        localStorage.setItem('theme', Theme.DARK);
+        refs.body.setAttribute('class', 'dark-theme');
+    } else {
+        localStorage.setItem('theme', Theme.LIGHT);
+        refs.body.setAttribute('class', 'light-theme');
     }
 }
-
